@@ -1,0 +1,85 @@
+<% content_for :head do %>
+  <%= stylesheet_link_tag "forecast", "data-turbo-track": "reload" %>
+<% end %>
+
+<div class="forecast-container">
+  <h1>Weather Forecast</h1>
+
+  <%= form_tag forecast_index_path, method: :get, class: 'search-form' do %>
+    <div class="input-group">
+      <%= text_field_tag :address, @address, placeholder: 'Enter an address (e.g., Tampa, FL)', class: 'address-input' %>
+      <%= submit_tag 'Get Forecast', class: 'submit-btn' %>
+    </div>
+  <% end %>
+
+  <% if flash[:alert] %>
+    <div class="alert alert-danger">
+      <%= flash[:alert] %>
+    </div>
+  <% end %>
+
+  <% if @current.present? %>
+    <% if @from_cache %>
+      <div class="cache-notice">
+        Showing cached data (updated within last 30 minutes)
+      </div>
+    <% end %>
+
+    <div class="current-weather">
+      <h2><%= @location['name'] %>, <%= @location['country'] %></h2>
+
+      <div class="weather-main">
+        <span class="weather-icon"><%= weather_icon(@current['weather_code']) %></span>
+        <span class="temperature"><%= @current['temperature'].round %>°F</span>
+      </div>
+
+      <p class="weather-description"><%= weather_description(@current['weather_code']) %></p>
+
+      <div class="weather-details">
+        <div class="detail">
+          <span class="label">Feels like</span>
+          <span class="value"><%= @current['apparent_temperature'].round %>°F</span>
+        </div>
+        <div class="detail">
+          <span class="label">High</span>
+          <span class="value"><%= @today['high'].round %>°F</span>
+        </div>
+        <div class="detail">
+          <span class="label">Low</span>
+          <span class="value"><%= @today['low'].round %>°F</span>
+        </div>
+        <div class="detail">
+          <span class="label">Humidity</span>
+          <span class="value"><%= @current['humidity'] %>%</span>
+        </div>
+        <div class="detail">
+          <span class="label">Wind</span>
+          <span class="value"><%= @current['wind_speed'].round %> mph</span>
+        </div>
+        <div class="detail">
+          <span class="label">Precip. chance</span>
+          <span class="value"><%= @today['precipitation_probability'] %>%</span>
+        </div>
+      </div>
+    </div>
+
+    <% if @extended_forecast.present? %>
+      <div class="extended-forecast">
+        <h3>7-Day Forecast</h3>
+        <div class="forecast-grid">
+          <% @extended_forecast.each_with_index do |day, index| %>
+            <div class="forecast-day <%= 'today' if index == 0 %>">
+              <span class="day-name"><%= day_name(day['date'], index) %></span>
+              <span class="day-icon"><%= weather_icon(day['weather_code']) %></span>
+              <span class="day-temps">
+                <span class="high"><%= day['high'].round %>°</span>
+                <span class="low"><%= day['low'].round %>°</span>
+              </span>
+              <span class="day-precip"><%= day['precipitation_probability'] %>%</span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+</div>
