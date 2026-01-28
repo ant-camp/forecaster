@@ -1,29 +1,5 @@
 # frozen_string_literal: true
 
-# ForecastController
-#
-# This controller handles weather forecast requests for the application.
-# It serves as the main entry point for users to retrieve weather data
-# based on a given address.
-#
-# == Responsibilities
-# - Accept address input from users via query parameters
-# - Delegate weather data fetching to the ForecastService
-# - Handle successful responses by setting instance variables for the view
-# - Handle error cases by displaying appropriate flash messages
-#
-# == Dependencies
-# - ForecastService: Service object that handles geocoding and weather API calls
-# - ForecastHelper: View helper for weather code translations and date formatting
-#
-# == Routes
-# - GET /forecast (forecast_index_path) - Main forecast page
-# - GET / (root_path) - Redirects to forecast index
-#
-# == Example Usage
-# GET /forecast?address=Tampa,%20FL
-# GET /forecast?address=New%20York,%20NY
-#
 class ForecastController < ApplicationController
   # GET /forecast
   #
